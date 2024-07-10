@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"tesla-ble-proxy/pkg/web"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +12,7 @@ func init() {
 		Short: "Starts the web server",
 		Run: func(_ *cobra.Command, _ []string) {
 
-			fmt.Println("TODO")
+			web.Serve()
 		},
 	})
 }
