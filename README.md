@@ -13,3 +13,7 @@ apk add go
 cd /mnt
 go build -o tesla-ble-proxy .
 ```
+
+## Test client 
+
+TESLA_VIN=<xxx> go run test-cli/main.go
