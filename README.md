@@ -14,6 +14,23 @@ cd /mnt
 go build -o tesla-ble-proxy .
 ```
 
+## Deploy on raspberry pi (quick and dirty)
+
+on builder:
+```bash
+scp tesla-ble-proxy root@<target>:/usr/bin/tesla-ble-proxy
+scp alpine/tesla-ble-proxy.initd root@<target>:/etc/init.d/tesla-ble-proxy
+```
+
+on target:
+```bash
+rc-update add tesla-ble-proxy
+rc-service tesla-ble-proxy start
+lbu include /usr/bin/tesla-ble-proxy
+lbu include /etc/init.d/tesla-ble-proxy
+lbu commit -d
+```
+
 ## Test client 
 
 ```bash
