@@ -32,7 +32,13 @@ const ResponseCredentialsNeeded ResponseCode = "credentials-needed"
 const ResponseError ResponseCode = "error"
 const ResponseOK ResponseCode = "success"
 
-func Serve(address string) {
+func Serve(address string, debug bool) {
+	if debug {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
 
 	r.POST("/car-credentials", func(c *gin.Context) {
