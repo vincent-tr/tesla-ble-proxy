@@ -162,10 +162,12 @@ func (conn *Connection) runCommand(callback func(ctx context.Context, car *vehic
 	if err := car.Connect(ctx); err != nil {
 		return err
 	}
-	defer func() {
-		car.UpdateCachedSessions(conn.sessionCache)
-		defer car.Disconnect()
-	}()
+	defer car.Disconnect()
+
+	if err := car.StartSession(ctx, nil); err != nil {
+		return err
+	}
+	car.UpdateCachedSessions(conn.sessionCache)
 
 	return callback(ctx, car)
 }
