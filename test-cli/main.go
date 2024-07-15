@@ -25,6 +25,8 @@ type Response struct {
 	Message string       `json:"message"`
 }
 
+var target string
+
 func main() {
 
 	privKey, err := os.ReadFile("../tesla-auth/vehicle-private-key.pem")
@@ -33,8 +35,10 @@ func main() {
 	}
 
 	vin := os.Getenv("TESLA_VIN")
+	target = os.Getenv("BLE_PROXY")
 
 	fmt.Printf("VIN: %s\n", vin)
+	fmt.Printf("target: %s\n", target)
 
 	creds := CarCredentialsRequest{
 		PrivateKey: privKey,
@@ -61,7 +65,7 @@ func post(path string, reqObj any) (*Response, error) {
 
 	fmt.Printf("req: %s\n", string(data))
 
-	req, err := http.NewRequest("POST", "http://rpi-ble-proxy:8080"+path, bytes.NewBuffer(data))
+	req, err := http.NewRequest("POST", "http://"+target+path, bytes.NewBuffer(data))
 	if err != nil {
 		panic(err)
 	}
