@@ -2,6 +2,12 @@ package web
 
 import (
 	"context"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/x509"
+	"encoding/pem"
+	"errors"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -52,7 +58,17 @@ func Serve() {
 			return
 		}
 
-		connection = MakeConnection([]byte(creds.PrivateKey), creds.VIN)
+		conn, err := MakeConnection([]byte(creds.PrivateKey), creds.VIN)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, &Response{
+				Code:    ResponseError,
+				Message: err.Error(),
+			})
+
+			return
+		}
+
+		connection = conn
 
 		c.Status(http.StatusOK)
 	})
@@ -133,12 +149,24 @@ type Connection struct {
 	commandLock  sync.Mutex
 }
 
-func MakeConnection(privateKey []byte, vin string) *Connection {
-	return &Connection{
-		privKey:      protocol.UnmarshalECDHPrivateKey(privateKey),
+func MakeConnection(privateKey []byte, vin string) (*Connection, error) {
+	privKey, err := LoadExternalECDHKey(privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("privateKey=%s\n\n", string(privateKey))
+	fmt.Printf("bin=%s\n", vin)
+
+	fmt.Printf("privKey=%+v\n", privKey)
+
+	conn := &Connection{
+		privKey:      privKey,
 		vin:          vin,
 		sessionCache: cache.New(0),
 	}
+
+	return conn, nil
 }
 
 func (conn *Connection) runCommand(callback func(ctx context.Context, car *vehicle.Vehicle) error) error {
@@ -212,4 +240,41 @@ func (conn *Connection) ChangeChargeLimit(chargeLimitPercent int32) error {
 	return conn.runCommand(func(ctx context.Context, car *vehicle.Vehicle) error {
 		return car.ChangeChargeLimit(ctx, chargeLimitPercent)
 	})
+}
+
+// Copy/Paste from LoadExternalECDHKey
+var ErrInvalidPrivateKey = errors.New("invalid private key")
+
+func LoadExternalECDHKey(pemBlock []byte) (protocol.ECDHPrivateKey, error) {
+	block, _ := pem.Decode([]byte(pemBlock))
+	if block == nil {
+		return nil, fmt.Errorf("%w: expected PEM encoding", ErrInvalidPrivateKey)
+	}
+
+	var ecdsaPrivateKey *ecdsa.PrivateKey
+	var err error
+
+	if block.Type == "EC PRIVATE KEY" {
+		ecdsaPrivateKey, err = x509.ParseECPrivateKey(block.Bytes)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		privateKey, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if err != nil {
+			return nil, err
+		}
+		var ok bool
+		if ecdsaPrivateKey, ok = privateKey.(*ecdsa.PrivateKey); !ok {
+			return nil, fmt.Errorf("%w: only elliptic curve keys supported", ErrInvalidPrivateKey)
+		}
+	}
+
+	if ecdsaPrivateKey.Curve != elliptic.P256() {
+		return nil, fmt.Errorf("%w: only NIST-P256 keys supported", ErrInvalidPrivateKey)
+	}
+
+	privateScalar := ecdsaPrivateKey.D.Bytes()
+
+	return protocol.UnmarshalECDHPrivateKey(privateScalar), nil
 }
