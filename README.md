@@ -14,12 +14,6 @@ cd /mnt
 go build -o tesla-ble-proxy .
 ```
 
-## Run on raspberry pi
-
-```bash
-PORT=80 ./tesla-ble-proxy web
-```
-
 ## Test client 
 
 ```bash

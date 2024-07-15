@@ -32,7 +32,7 @@ const ResponseCredentialsNeeded ResponseCode = "credentials-needed"
 const ResponseError ResponseCode = "error"
 const ResponseOK ResponseCode = "success"
 
-func Serve() {
+func Serve(address string) {
 	r := gin.Default()
 
 	r.POST("/car-credentials", func(c *gin.Context) {
@@ -99,7 +99,7 @@ func Serve() {
 		return conn.ChangeChargeLimit(req.ChargeLimitPercent)
 	}))
 
-	r.Run()
+	r.Run(address)
 }
 
 func makeCommandHandler(commandHandler func(c *gin.Context, conn *tesla.Connection) error) func(c *gin.Context) {

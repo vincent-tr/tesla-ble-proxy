@@ -6,13 +6,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var address string
+
 func init() {
-	rootCmd.AddCommand(&cobra.Command{
+
+	cmd := &cobra.Command{
 		Use:   "web",
 		Short: "Starts the web server",
 		Run: func(_ *cobra.Command, _ []string) {
 
-			web.Serve()
+			web.Serve(address)
 		},
-	})
+	}
+
+	cmd.Flags().StringVarP(&address, "address", "a", ":80", "Address for the webserver to listen on")
+
+	rootCmd.AddCommand(cmd)
 }
