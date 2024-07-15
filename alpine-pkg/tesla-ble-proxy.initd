@@ -1,0 +1,14 @@
+#!/sbin/openrc-run
+
+name=tesla-ble-proxy
+command=/usr/bin/tesla-ble-proxy
+# command_args=
+
+supervisor=supervise-daemon
+# respawn_delay=1 # default = immediately
+respawn_max=0
+
+depend() {
+  need net
+  after firewall
+}
