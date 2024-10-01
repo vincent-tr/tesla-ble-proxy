@@ -3,6 +3,10 @@
 name=tesla-ble-proxy
 command=/usr/bin/tesla-ble-proxy
 # command_args=
+command_background=true
+
+output_log=/var/log/tesla-ble-proxy-output.log
+error_log=/var/log/tesla-ble-proxy.error.log
 
 supervisor=supervise-daemon
 # respawn_delay=1 # default = immediately
