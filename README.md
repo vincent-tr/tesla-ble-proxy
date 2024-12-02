@@ -1,6 +1,12 @@
 # tesla-ble-proxy
 Tesla BLE Rest API (proxy)
 
+## fix go-ble deadlock
+
+use `vincent-tr/ble_BleConnectFix`: in go.mod
+
+replace github.com/go-ble/ble => github.com/vincent-tr/ble_BleConnectFix master
+
 ## Build for raspberry pi
 
 ```bash

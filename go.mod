@@ -2,6 +2,14 @@ module tesla-ble-proxy
 
 go 1.22.5
 
+replace github.com/go-ble/ble => github.com/vincent-tr/ble_BleConnectFix v0.0.0-20240822192426-3f74826c1268
+
+require (
+	github.com/gin-gonic/gin v1.10.0
+	github.com/spf13/cobra v1.8.1
+	github.com/teslamotors/vehicle-command v0.0.2
+)
+
 require (
 	github.com/JuulLabs-OSS/cbgo v0.0.1 // indirect
 	github.com/bytedance/sonic v1.11.9 // indirect
@@ -10,7 +18,6 @@ require (
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.4 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/gin v1.10.0 // indirect
 	github.com/go-ble/ble v0.0.0-20220207185428-60d1eecf2633 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
@@ -31,9 +38,7 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/raff/goble v0.0.0-20190909174656-72afc67d6a99 // indirect
 	github.com/sirupsen/logrus v1.5.0 // indirect
-	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/teslamotors/vehicle-command v0.0.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.8.0 // indirect
