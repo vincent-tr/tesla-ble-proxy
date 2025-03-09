@@ -12,7 +12,7 @@ replace github.com/go-ble/ble => github.com/vincent-tr/ble_BleConnectFix master
 ```bash
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes --credential yes
 
-docker run --platform linux/arm64 --rm -ti -v $(pwd):/mnt arm64v8/alpine:3.20.1 /bin/sh
+docker run --platform linux/arm64 --rm -ti -v $(pwd):/mnt arm64v8/alpine:3.21.3 /bin/sh
 
 apk update
 apk add go
