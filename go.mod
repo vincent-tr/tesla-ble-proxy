@@ -4,7 +4,7 @@ go 1.23.0
 
 toolchain go1.24.0
 
-// replace github.com/go-ble/ble => github.com/vincent-tr/ble_BleConnectFix v0.0.0-20240822192426-3f74826c1268
+replace github.com/go-ble/ble => github.com/vincent-tr/ble_BleConnectFix v0.0.0-20240822192426-3f74826c1268
 
 require (
 	github.com/gin-gonic/gin v1.10.0
